@@ -181,13 +181,13 @@ if __name__ == "__main__":
     # execute only if run as a script
 
     DECK = [
+        ["Giannis", "Antetokounmpo"],
         ["Anthony", "Davis"],
-        ["Russell", "Westbrook"],
         ["James", "Harden"],
-        ["Kevin", "Durant"],
-        ["Giannis", "Antetokounmpo"]
+        ["LeBron", "James"],
+        ["Russell", "Westbrook"],
     ]
 
-    NB_GAMES = 5
+    NB_GAMES = 10
 
     get_deck_ratings(DECK, NB_GAMES)
