@@ -46,7 +46,20 @@ def get_player_trend(pid, nb_games, name):
 
     data = [trace1, trace2]
 
-    po.plot(data, filename='%s Trend.html' % name)
+    layout = pgo.Layout(
+        title= '%s Rating Trend' % name,
+        xaxis= dict(
+            title= 'Nb Games',
+        ),
+        yaxis=dict(
+            title='Score',
+            range= [0, 100],
+        ),
+    )
+
+    fig = pgo.Figure(data=data, layout=layout)
+
+    po.plot(fig, filename='%s Trend.html' % name)
 
 
 def get_ttfl_score(splits):
@@ -125,17 +138,26 @@ def get_deck_ratings(deck, nb_games):
     # ---
 
     # trace bars representing last n games and overall season nba fp and ttfl ratings
-    trace1 = pgo.Bar(x=names, y=last_n_games_fp, name='last %d games fp avg' % nb_games)
+    trace1 = pgo.Bar(x=names, y=last_n_games_fp, name='last %d games nba fp avg' % nb_games)
 
-    trace2 = pgo.Bar(x=names, y=overall_fp, name='season overall fp avg')
+    trace2 = pgo.Bar(x=names, y=overall_fp, name='overall season nba fp avg')
 
     trace3 = pgo.Bar(x=names, y=last_n_games_ttfl_score, name='last %d games ttfl avg' % nb_games)
 
-    trace4 = pgo.Bar(x=names, y=overall_ttfl_score, name='season overall ttfl avg')
+    trace4 = pgo.Bar(x=names, y=overall_ttfl_score, name='overall season ttfl avg')
 
     data = [trace1, trace2, trace3, trace4]
 
-    layout = pgo.Layout(barmode='group', xaxis=dict(tickangle=-45))
+    layout = pgo.Layout(
+        title= 'Deck Ratings',
+        barmode='group',
+        xaxis= dict(
+            title= 'Player',
+        ),
+        yaxis=dict(
+            title='Score',
+        ),
+    )
 
     fig = pgo.Figure(data=data, layout=layout)
 
