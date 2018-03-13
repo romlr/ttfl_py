@@ -19,9 +19,6 @@ def get_player_trend(pid, nb_games, name):
 
     game_n_fp.append(total_fp[-1])
 
-    print total_fp
-    print game_n_fp
-
     trace = pgo.Scatter( x=range(nb_games, 0, -1),
                          y=game_n_fp,
                          mode='lines+markers')
