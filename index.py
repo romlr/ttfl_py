@@ -34,15 +34,25 @@ def get_player_trend(pid, nb_games, name):
     # ---
 
     # trace plots for nba fp and ttfl score trends
-    trace1 = pgo.Scatter( x=range(0, nb_games),
-                         y=game_n_fp,
-                         mode='lines+markers',
-                         name='nba fp trend')
+    trace1 = pgo.Scatter(
+        x=range(0, nb_games),
+        y=game_n_fp,
+        mode='lines+markers',
+        name='nba fp trend',
+        line=dict(
+            shape='spline',
+        )
+    )
 
-    trace2 = pgo.Scatter( x=range(0, nb_games),
-                         y=game_n_ttfl,
-                         mode='lines+markers',
-                         name='ttfl score trend')
+    trace2 = pgo.Scatter(
+        x=range(0, nb_games),
+        y=game_n_ttfl,
+        mode='lines+markers',
+        name='ttfl score trend',
+        line = dict(
+            shape='spline',
+        )
+    )
 
     data = [trace1, trace2]
 
