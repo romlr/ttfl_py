@@ -34,8 +34,12 @@ def get_player_trend(pid, nb_games, name):
     # ---
 
     # trace plots for nba fp and ttfl score trends
+    xaxis = []
+    for n in range(nb_games, 0, -1):
+        xaxis.append("N - %d" % n)
+
     trace1 = pgo.Scatter(
-        x=range(0, nb_games),
+        x=xaxis,
         y=game_n_fp,
         mode='lines+markers',
         name='nba fp trend',
@@ -45,7 +49,7 @@ def get_player_trend(pid, nb_games, name):
     )
 
     trace2 = pgo.Scatter(
-        x=range(0, nb_games),
+        x=xaxis,
         y=game_n_ttfl,
         mode='lines+markers',
         name='ttfl score trend',
@@ -59,7 +63,7 @@ def get_player_trend(pid, nb_games, name):
     layout = pgo.Layout(
         title= '%s Rating Trend' % name,
         xaxis= dict(
-            title= 'Nb Games',
+            title= 'Games',
         ),
         yaxis=dict(
             title='Score',
