@@ -3,7 +3,7 @@ import plotly.offline as po
 import plotly.graph_objs as pgo
 
 
-def get_player_trend(pid, nb_games, name):
+def get_player_trend(pid, nb_games, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl):
 
     total_fp = []
     total_ttfl = []
@@ -58,7 +58,47 @@ def get_player_trend(pid, nb_games, name):
         )
     )
 
-    data = [trace1, trace2]
+    trace3 = pgo.Scatter(
+        x=xaxis,
+        y=[av_n_fp]*nb_games,
+        mode='lines',
+        name='last %d games nba fp avg' % nb_games,
+        line = dict(
+            dash='dash',
+        )
+    )
+
+    trace4 = pgo.Scatter(
+        x=xaxis,
+        y=[av_n_ttfl]*nb_games,
+        mode='lines',
+        name='last %d games ttfl avg' % nb_games,
+        line = dict(
+            dash='dash',
+        )
+    )
+
+    trace5 = pgo.Scatter(
+        x=xaxis,
+        y=[av_ov_fp]*nb_games,
+        mode='lines',
+        name='overall season nba fp avg',
+        line = dict(
+            dash='dash',
+        )
+    )
+
+    trace6 = pgo.Scatter(
+        x=xaxis,
+        y=[av_ov_ttfl]*nb_games,
+        mode='lines',
+        name='overall season ttfl avg',
+        line = dict(
+            dash='dash',
+        )
+    )
+
+    data = [trace1, trace2, trace3, trace4, trace5, trace6]
 
     layout = pgo.Layout(
         title= '%s Rating Trend' % name,
@@ -154,9 +194,9 @@ def get_deck_ratings(deck, nb_games):
     # trace bars representing last n games and overall season nba fp and ttfl ratings
     trace1 = pgo.Bar(x=names, y=last_n_games_fp, name='last %d games nba fp avg' % nb_games)
 
-    trace2 = pgo.Bar(x=names, y=overall_fp, name='overall season nba fp avg')
+    trace2 = pgo.Bar(x=names, y=last_n_games_ttfl_score, name='last %d games ttfl avg' % nb_games)
 
-    trace3 = pgo.Bar(x=names, y=last_n_games_ttfl_score, name='last %d games ttfl avg' % nb_games)
+    trace3 = pgo.Bar(x=names, y=overall_fp, name='overall season nba fp avg')
 
     trace4 = pgo.Bar(x=names, y=overall_ttfl_score, name='overall season ttfl avg')
 
@@ -177,19 +217,29 @@ def get_deck_ratings(deck, nb_games):
 
     po.plot(fig, filename='Deck Ratings.html')
 
-    for pid, name in zip(pids, names):
-        get_player_trend(pid, nb_games, name)
+    # iterate through player ids
+    for (pid, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl) in zip(pids,
+                                                                    names,
+                                                                    last_n_games_fp,
+                                                                    last_n_games_ttfl_score,
+                                                                    overall_fp,
+                                                                    overall_ttfl_score):
+
+        # get player trend for last nb games
+        get_player_trend(pid, nb_games, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl)
 
 
 if __name__ == "__main__":
     # execute only if run as a script
 
     DECK = [
-        ["Giannis", "Antetokounmpo"],
+        ["Chris", "Paul"],
         ["Anthony", "Davis"],
-        ["James", "Harden"],
-        ["LeBron", "James"],
-        ["Russell", "Westbrook"],
+        ["Khris", "Middleton"],
+        ["Rudy", "Gobert"],
+        ["Ben", "Simmons"],
+        ["Karl-Anthony", "Towns"],
+        ["DeMar", "DeRozan"],
     ]
 
     NB_GAMES = 10
