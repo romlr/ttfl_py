@@ -5,13 +5,19 @@ from nba_py import player as nba_player
 import score
 
 
-def get_player_trend(pid, nb_games, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl):
+def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl, nb_games):
 
     total_fp = []
     total_ttfl = []
 
     game_n_fp = []
     game_n_ttfl = []
+
+    PLAYER_HEADSHOT_URL = 'https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/'
+    PLAYER_HEADSHOT_EXT = '.png'
+
+    TEAM_LOGO_URL = 'https://i.cdn.turner.com/nba/nba/.element/media/2.0/teamsites/lakers/images/gameday/NBA_logos/'
+    TEAM_LOGO_EXT = '.png'
 
     # ---
 
@@ -47,7 +53,8 @@ def get_player_trend(pid, nb_games, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_tt
         name='nba fp trend',
         line=dict(
             shape='spline',
-        )
+        ),
+        hoverinfo='y'
     )
 
     trace2 = pgo.Scatter(
@@ -57,7 +64,8 @@ def get_player_trend(pid, nb_games, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_tt
         name='ttfl score trend',
         line = dict(
             shape='spline',
-        )
+        ),
+        hoverinfo='y'
     )
 
     trace3 = pgo.Scatter(
@@ -67,7 +75,8 @@ def get_player_trend(pid, nb_games, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_tt
         name='last %d games nba fp avg' % nb_games,
         line = dict(
             dash='dash',
-        )
+        ),
+        hoverinfo='y'
     )
 
     trace4 = pgo.Scatter(
@@ -77,7 +86,8 @@ def get_player_trend(pid, nb_games, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_tt
         name='last %d games ttfl avg' % nb_games,
         line = dict(
             dash='dash',
-        )
+        ),
+        hoverinfo='y'
     )
 
     trace5 = pgo.Scatter(
@@ -87,7 +97,8 @@ def get_player_trend(pid, nb_games, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_tt
         name='overall season nba fp avg',
         line = dict(
             dash='dash',
-        )
+        ),
+        hoverinfo='y'
     )
 
     trace6 = pgo.Scatter(
@@ -97,7 +108,8 @@ def get_player_trend(pid, nb_games, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_tt
         name='overall season ttfl avg',
         line = dict(
             dash='dash',
-        )
+        ),
+        hoverinfo='y'
     )
 
     data = [trace1, trace2, trace3, trace4, trace5, trace6]
@@ -111,6 +123,25 @@ def get_player_trend(pid, nb_games, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_tt
             title='Score',
             range= [0, 100],
         ),
+        images=[
+            dict(
+                source=PLAYER_HEADSHOT_URL + str(pid.values[0]) + PLAYER_HEADSHOT_EXT,
+                xref="paper", yref="paper",
+                x=0.1, y=1.1,
+                sizex=0.25, sizey=0.25,
+                xanchor="center", yanchor="top",
+                layer = "below",
+    ),
+            dict(
+                source=TEAM_LOGO_URL + team + TEAM_LOGO_EXT,
+                xref="paper", yref="paper",
+                x=0.5, y=0.5,
+                sizex=0.5, sizey=0.5,
+                xanchor="center", yanchor="middle",
+                opacity=0.2,
+                layer="below",
+            ),
+        ],
     )
 
     fig = pgo.Figure(data=data, layout=layout)

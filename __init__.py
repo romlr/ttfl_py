@@ -5,8 +5,9 @@ if __name__ == "__main__":
     # execute only if run as a script
 
     DECK = [
-        ["Khris", "Middleton"],
-        ["Julius", "Randle"],
+        ["Anthony", "Davis"],
+        ["Rudy", "Gobert"],
+        ["James", "Harden"],
     ]
 
     NB_GAMES = 10

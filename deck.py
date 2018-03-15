@@ -8,6 +8,7 @@ def get_deck_ratings(deck, nb_games):
 
     pids = []
     names = []
+    teams = []
 
     # ---
 
@@ -31,6 +32,8 @@ def get_deck_ratings(deck, nb_games):
         info = nba_player.PlayerSummary(pid).info()
         name = '%s %s' % (info['FIRST_NAME'].values[0], info['LAST_NAME'].values[0])
         names.append(name)
+        team = info['TEAM_NAME'].values[0]
+        teams.append(team)
 
         # fetch player splits for last N games (passed as parameter)
         last_splits =  nba_player.PlayerGeneralSplits(pid, season="2017-18", measure_type="Base", last_n_games=nb_games).overall()
@@ -54,13 +57,33 @@ def get_deck_ratings(deck, nb_games):
     # ---
 
     # trace bars representing last n games and overall season nba fp and ttfl ratings
-    trace1 = pgo.Bar(x=names, y=last_n_games_fp, name='last %d games nba fp avg' % nb_games)
+    trace1 = pgo.Bar(
+        x=names,
+        y=last_n_games_fp,
+        name='last %d games nba fp avg' % nb_games,
+        hoverinfo='y'
+    )
 
-    trace2 = pgo.Bar(x=names, y=last_n_games_ttfl_score, name='last %d games ttfl avg' % nb_games)
+    trace2 = pgo.Bar(
+        x=names,
+        y=last_n_games_ttfl_score,
+        name='last %d games ttfl avg' % nb_games,
+        hoverinfo='y'
+    )
 
-    trace3 = pgo.Bar(x=names, y=overall_fp, name='overall season nba fp avg')
+    trace3 = pgo.Bar(
+        x=names,
+        y=overall_fp,
+        name='overall season nba fp avg',
+        hoverinfo='y'
+    )
 
-    trace4 = pgo.Bar(x=names, y=overall_ttfl_score, name='overall season ttfl avg')
+    trace4 = pgo.Bar(
+        x=names,
+        y=overall_ttfl_score,
+        name='overall season ttfl avg',
+        hoverinfo='y'
+    )
 
     data = [trace1, trace2, trace3, trace4]
 
@@ -80,12 +103,13 @@ def get_deck_ratings(deck, nb_games):
     po.plot(fig, filename='Deck Ratings.html')
 
     # iterate through player ids
-    for (pid, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl) in zip(pids,
+    for (pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl) in zip(pids,
                                                                     names,
+                                                                    teams,
                                                                     last_n_games_fp,
                                                                     last_n_games_ttfl_score,
                                                                     overall_fp,
                                                                     overall_ttfl_score):
 
         # get player trend for last nb games
-        player.get_player_trend(pid, nb_games, name, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl)
+        player.get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl, nb_games)
