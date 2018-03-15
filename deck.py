@@ -81,7 +81,7 @@ def get_deck_ratings(deck, nb_games):
         info = nba_player.PlayerSummary(pid).info()
         name = '%s %s' % (info['FIRST_NAME'].values[0], info['LAST_NAME'].values[0])
         names.append(name)
-        team = info['TEAM_NAME'].values[0]
+        team = info['TEAM_ABBREVIATION'].values[0]
         teams.append(team)
 
         # fetch player splits for last N games (passed as parameter)

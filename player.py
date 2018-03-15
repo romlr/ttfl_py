@@ -16,7 +16,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
     PLAYER_HEADSHOT_URL = 'https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/'
     PLAYER_HEADSHOT_EXT = '.png'
 
-    TEAM_LOGO_URL = 'https://i.cdn.turner.com/nba/nba/.element/media/2.0/teamsites/lakers/images/gameday/NBA_logos/'
+    TEAM_LOGO_URL = 'http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/'
     TEAM_LOGO_EXT = '.png'
 
     # ---
@@ -136,7 +136,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
                 source=TEAM_LOGO_URL + team + TEAM_LOGO_EXT,
                 xref="paper", yref="paper",
                 x=0.5, y=0.5,
-                sizex=0.5, sizey=0.5,
+                sizex=1, sizey=1,
                 xanchor="center", yanchor="middle",
                 opacity=0.2,
                 layer="below",
