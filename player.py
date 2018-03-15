@@ -5,7 +5,7 @@ from nba_py import player as nba_player
 import score
 
 
-def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl, nb_games):
+def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av_ov_ttfl, ov_gp):
 
     total_fp = []
     total_ttfl = []
@@ -94,7 +94,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl, 
         x=xaxis,
         y=[av_ov_fp]*nb_games,
         mode='lines',
-        name='overall season nba fp avg',
+        name='overall season (%d) nba fp avg' % ov_gp,
         line = dict(
             dash='dash',
         ),
@@ -105,7 +105,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl, 
         x=xaxis,
         y=[av_ov_ttfl]*nb_games,
         mode='lines',
-        name='overall season ttfl avg',
+        name='overall season (%d) ttfl avg' % ov_gp,
         line = dict(
             dash='dash',
         ),

@@ -5,7 +5,6 @@ if __name__ == "__main__":
     # execute only if run as a script
 
     DECK = [
-        ["Anthony", "Davis"],
         ["Rudy", "Gobert"],
         ["James", "Harden"],
     ]

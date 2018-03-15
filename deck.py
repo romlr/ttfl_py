@@ -4,6 +4,55 @@ import plotly.graph_objs as pgo
 from nba_py import player as nba_player
 import player, score
 
+
+def plot_deck_ratings(names, last_n_games_fp, last_n_games_ttfl_score, nb_games, overall_fp, overall_ttfl_score):
+    # trace bars representing last n games and overall season nba fp and ttfl ratings
+    trace1 = pgo.Bar(
+        x=names,
+        y=last_n_games_fp,
+        name='last %d games nba fp avg' % nb_games,
+        hoverinfo='y'
+    )
+
+    trace2 = pgo.Bar(
+        x=names,
+        y=last_n_games_ttfl_score,
+        name='last %d games ttfl avg' % nb_games,
+        hoverinfo='y'
+    )
+
+    trace3 = pgo.Bar(
+        x=names,
+        y=overall_fp,
+        name='overall season nba fp avg',
+        hoverinfo='y'
+    )
+
+    trace4 = pgo.Bar(
+        x=names,
+        y=overall_ttfl_score,
+        name='overall season ttfl avg',
+        hoverinfo='y'
+    )
+
+    data = [trace1, trace2, trace3, trace4]
+
+    layout = pgo.Layout(
+        title= 'Deck Ratings',
+        barmode='group',
+        xaxis= dict(
+            title= 'Player',
+        ),
+        yaxis=dict(
+            title='Score',
+        ),
+    )
+
+    fig = pgo.Figure(data=data, layout=layout)
+
+    po.plot(fig, filename='Deck Ratings.html')
+
+
 def get_deck_ratings(deck, nb_games):
 
     pids = []
@@ -56,60 +105,19 @@ def get_deck_ratings(deck, nb_games):
 
     # ---
 
-    # trace bars representing last n games and overall season nba fp and ttfl ratings
-    trace1 = pgo.Bar(
-        x=names,
-        y=last_n_games_fp,
-        name='last %d games nba fp avg' % nb_games,
-        hoverinfo='y'
-    )
+    plot_deck_ratings(names, last_n_games_fp, last_n_games_ttfl_score, nb_games, overall_fp, overall_ttfl_score)
 
-    trace2 = pgo.Bar(
-        x=names,
-        y=last_n_games_ttfl_score,
-        name='last %d games ttfl avg' % nb_games,
-        hoverinfo='y'
-    )
-
-    trace3 = pgo.Bar(
-        x=names,
-        y=overall_fp,
-        name='overall season nba fp avg',
-        hoverinfo='y'
-    )
-
-    trace4 = pgo.Bar(
-        x=names,
-        y=overall_ttfl_score,
-        name='overall season ttfl avg',
-        hoverinfo='y'
-    )
-
-    data = [trace1, trace2, trace3, trace4]
-
-    layout = pgo.Layout(
-        title= 'Deck Ratings',
-        barmode='group',
-        xaxis= dict(
-            title= 'Player',
-        ),
-        yaxis=dict(
-            title='Score',
-        ),
-    )
-
-    fig = pgo.Figure(data=data, layout=layout)
-
-    po.plot(fig, filename='Deck Ratings.html')
+    # ---
 
     # iterate through player ids
-    for (pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl) in zip(pids,
+    for (pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl, ov_gp) in zip(pids,
                                                                     names,
                                                                     teams,
                                                                     last_n_games_fp,
                                                                     last_n_games_ttfl_score,
                                                                     overall_fp,
-                                                                    overall_ttfl_score):
+                                                                    overall_ttfl_score,
+                                                                    overall_gp):
 
         # get player trend for last nb games
-        player.get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl, nb_games)
+        player.get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av_ov_ttfl, ov_gp)
