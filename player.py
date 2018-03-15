@@ -133,7 +133,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
                 layer = "below",
     ),
             dict(
-                source=TEAM_LOGO_URL + team + TEAM_LOGO_EXT,
+                source=TEAM_LOGO_URL + team.lower() + TEAM_LOGO_EXT,
                 xref="paper", yref="paper",
                 x=0.5, y=0.5,
                 sizex=1, sizey=1,
