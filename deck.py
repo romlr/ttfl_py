@@ -6,6 +6,11 @@ import player, score
 
 
 def plot_deck_ratings(names, last_n_games_fp, last_n_games_ttfl_score, nb_games, overall_fp, overall_ttfl_score):
+
+    # logos url constants
+    NBA_LOGO_URL = 'https://secure.nba.com/assets/amp/include/images/nba-logo.png'
+    TTFL_LOGO_URL = 'http//fantasy.trashtalk.co/images/logo.png'
+
     # trace bars representing last n games and overall season nba fp and ttfl ratings
     trace1 = pgo.Bar(
         x=names,
