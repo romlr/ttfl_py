@@ -2,8 +2,20 @@ import plotly.offline as po
 import plotly.graph_objs as pgo
 
 from nba_py import player as nba_player, constants as nba_constants
-
 import score
+
+
+def get_player_next_game(pid):
+
+    # fetch next game from pid
+    next_game = nba_player.PlayerProfile(pid).next_game()
+
+    date = next_game['GAME_DATE'].values[0]
+    player_team = next_game['PLAYER_TEAM_ABBREVIATION'].values[0]
+    vs_team = next_game['VS_TEAM_ABBREVIATION'].values[0]
+    location = next_game['LOCATION'].values[0]
+
+    return (date, player_team, vs_team, location)
 
 
 def get_player_log(pid, nb_games):
@@ -38,6 +50,16 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
     # ---
 
     (game_matchup, game_date, game_fp, game_ttfl) = get_player_log(pid, nb_games)
+
+    # ---
+
+    (ng_date, player_team, vs_team, location) = get_player_next_game(pid)
+    if location == 'H':
+        ng_matchup = 'vs.'
+    else:
+        ng_matchup = '@'
+
+    ng_text = '%s<br>%s %s %s' % (ng_date, player_team, ng_matchup, vs_team)
 
     # ---
 
@@ -131,7 +153,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
                 sizex=0.25, sizey=0.25,
                 xanchor="center", yanchor="top",
                 layer = "below",
-    ),
+            ),
             dict(
                 source=TEAM_LOGO_URL + team.lower() + TEAM_LOGO_EXT,
                 xref="paper", yref="paper",
@@ -142,6 +164,14 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
                 layer="below",
             ),
         ],
+        annotations=pgo.Annotations([
+            pgo.Annotation(
+                xref='paper', yref='paper',
+                x=0.9, y=1.1,
+                showarrow=False,
+                text='Next Game: %s' % ng_text,
+            ),
+        ]),
     )
 
     fig = pgo.Figure(data=data, layout=layout)
