@@ -1,17 +1,33 @@
 import plotly.offline as po
 import plotly.graph_objs as pgo
 
-from nba_py import player as nba_player
+from nba_py import player as nba_player, constants as nba_constants
+
 import score
 
 
+def get_player_log(pid, nb_games):
+
+    games_logs = nba_player.PlayerGameLogs(pid, season='2017-18').info()
+
+    # ---
+    game_matchup = []
+    game_date = []
+    game_fp = []
+    game_ttfl = []
+
+    idx = nb_games-1
+    while idx >= 0:
+        game_matchup.append(games_logs['MATCHUP'].values[idx])
+        game_date.append(games_logs['GAME_DATE'].values[idx])
+        game_fp.append(score.get_fp_score(games_logs.iloc[[idx]]))
+        game_ttfl.append(score.get_ttfl_score(games_logs.iloc[[idx]]))
+        idx -= 1
+
+    return (game_matchup, game_date, game_fp, game_ttfl)
+
+
 def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av_ov_ttfl, ov_gp):
-
-    total_fp = []
-    total_ttfl = []
-
-    game_n_fp = []
-    game_n_ttfl = []
 
     PLAYER_HEADSHOT_URL = 'https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/'
     PLAYER_HEADSHOT_EXT = '.png'
@@ -21,34 +37,18 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
 
     # ---
 
-    # fetch players splits (totals) for each game
-    for idx in range(nb_games, 0, -1):
-        splits = nba_player.PlayerGeneralSplits(pid, season="2017-18", measure_type="Base",
-                                             last_n_games=idx, per_mode='Totals').overall()
-
-        # get nba fantasy points and calculate ttfl score
-        total_fp.append(splits['NBA_FANTASY_PTS'].values[0])
-        total_ttfl.append(score.get_ttfl_score(splits))
-
-    # calculate individual game splits for each game based on totals fetched
-    for idx in range(0, nb_games - 1):
-        game_n_fp.append(total_fp[idx] - total_fp[idx + 1])
-        game_n_ttfl.append(total_ttfl[idx] - total_ttfl[idx + 1])
-
-    # add latests game splits
-    game_n_fp.append(total_fp[-1])
-    game_n_ttfl.append(total_ttfl[-1])
+    (game_matchup, game_date, game_fp, game_ttfl) = get_player_log(pid, nb_games)
 
     # ---
 
     # trace plots for nba fp and ttfl score trends
     xaxis = []
-    for n in range(nb_games, 0, -1):
-        xaxis.append("N - %d" % n)
+    for (matchup, date) in zip(game_matchup, game_date):
+        xaxis.append("%s<br>%s" % (date, matchup))
 
     trace1 = pgo.Scatter(
         x=xaxis,
-        y=game_n_fp,
+        y=game_fp,
         mode='lines+markers',
         name='nba fp trend',
         line=dict(
@@ -59,7 +59,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
 
     trace2 = pgo.Scatter(
         x=xaxis,
-        y=game_n_ttfl,
+        y=game_ttfl,
         mode='lines+markers',
         name='ttfl score trend',
         line = dict(
