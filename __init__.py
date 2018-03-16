@@ -17,5 +17,7 @@ if __name__ == "__main__":
 
     # deck.get_deck_ratings(DECK, NB_GAMES)
 
-    today = datetime.date.today()
-    games.get_day_games(today)
+    NB_PLAYERS = 3
+
+    DATE = datetime.date.today()
+    games.get_day_games(DATE, NB_PLAYERS)
