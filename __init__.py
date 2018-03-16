@@ -1,10 +1,15 @@
 import datetime
 
-import deck, player, team, games
+import deck, games
 
 
 if __name__ == "__main__":
     # execute only if run as a script
+
+    NB_PLAYERS = 3
+    DATE = datetime.date.today()
+
+    games.get_day_games(DATE, NB_PLAYERS)
 
     DECK = [
         ["Ben", "Simmons"],
@@ -15,9 +20,4 @@ if __name__ == "__main__":
 
     NB_GAMES = 15
 
-    # deck.get_deck_ratings(DECK, NB_GAMES)
-
-    NB_PLAYERS = 3
-
-    DATE = datetime.date.today()
-    games.get_day_games(DATE, NB_PLAYERS)
+    deck.get_deck_ratings(DECK, NB_GAMES)
