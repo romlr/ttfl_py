@@ -138,11 +138,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
 
     layout = pgo.Layout(
         title= '%s Rating Trend' % name,
-        xaxis= dict(
-            title= 'Games',
-        ),
         yaxis=dict(
-            title='Score',
             range= [0, 100],
         ),
         images=[

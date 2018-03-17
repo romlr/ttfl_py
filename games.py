@@ -1,7 +1,21 @@
+import pandas
 import nba_py as nba
 import team
 
-def get_day_games(date, nb_best_players):
+
+def print_best_rated_players(players, nb_players):
+
+    name = players['PLAYER_NAME'].values
+    ttfl_avg = players['TTFL_SCORE'].values
+    fp_avg = players['NBA_FANTASY_PTS'].values
+
+    for i in range(0, nb_players):
+        print "%s (TTFL:%.1f, NBA FP: %.1f)" % (name[i], ttfl_avg[i], fp_avg[i])
+
+
+def get_day_games(date, nb_players):
+
+    shortlist = pandas.DataFrame(columns=['PLAYER_ID', 'PLAYER_NAME', 'TTFL_SCORE', 'NBA_FANTASY_PTS'])
 
     # get scoreboard for specified date
     games = nba.Scoreboard(date.month, date.day, date.year).game_header()
@@ -24,20 +38,21 @@ def get_day_games(date, nb_best_players):
 
         print "----------"
 
-        # get N best players from home team
-        (ht_player_id, ht_player_name, ht_player_fp_avg, ht_player_ttfl_avg) = \
-            team.get_team_best_rated_players(ht_id, nb_best_players)
-
-        for (id, name, fp_avg, ttfl_avg) in zip(ht_player_id, ht_player_name, ht_player_fp_avg, ht_player_ttfl_avg):
-            print "%s (TTFL:%.1f, NBA FP: %.1f)" % (name, ttfl_avg, fp_avg)
+        # fetch and print N best players from home team
+        ht_players = team.get_team_best_rated_players(ht_id, nb_players)
+        print_best_rated_players(ht_players, nb_players)
 
         print "vs."
 
-        # get N best players from visitor team
-        (vt_player_id, vt_player_name, vt_player_fp_avg, vt_player_ttfl_avg) = \
-            team.get_team_best_rated_players(vt_id, nb_best_players)
-
-        for (id, name, fp_avg, ttfl_avg) in zip(vt_player_id, vt_player_name, vt_player_fp_avg, vt_player_ttfl_avg):
-            print "%s (TTFL:%.1f, NBA FP: %.1f)" % (name, ttfl_avg, fp_avg)
+        # fetch and print N best players from visitor team
+        vt_players = team.get_team_best_rated_players(vt_id, nb_players)
+        print_best_rated_players(vt_players, nb_players)
 
         print "----------"
+
+        shortlist.append(ht_players)
+        shortlist.append(vt_players)
+
+    shortlist = shortlist.sort_values('TTFL_SCORE', ascending=False)
+
+    return shortlist

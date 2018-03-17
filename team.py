@@ -38,10 +38,7 @@ def get_team_best_rated_players(team_id, nb_players):
     players = players.sort_values('TTFL_SCORE', ascending=False)
 
     # fetch best N players from players splits
-    player_ttfl_avg = players['TTFL_SCORE'].values[0:nb_players]
-    player_id = players['PLAYER_ID'].values[0:nb_players]
-    player_name = players['PLAYER_NAME'].values[0:nb_players]
-    player_fp_avg = players['NBA_FANTASY_PTS'].values[0:nb_players]
+    players = players[0:nb_players]
 
     # return data
-    return (player_id, player_name, player_fp_avg, player_ttfl_avg)
+    return players
