@@ -35,11 +35,17 @@ def get_ttfl_score(splits):
         if (cat == 'FGM' or cat == 'FG3M' or cat == 'FTM'):
             n = 2
 
-        ttfl_score = ttfl_score + n*splits[cat].values[0]
+        try:
+            ttfl_score = ttfl_score + n*splits[cat].values[0]
+        except IndexError:
+            pass
 
     # remove malus part from score (- TOV - FGA - FG3A - FTA)
     for cat in malus:
-        ttfl_score = ttfl_score - splits[cat].values[0]
+        try:
+            ttfl_score = ttfl_score - splits[cat].values[0]
+        except IndexError:
+            pass
 
     # return calculated score
     return ttfl_score

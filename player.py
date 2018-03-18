@@ -143,7 +143,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
         ),
         images=[
             dict(
-                source=PLAYER_HEADSHOT_URL + str(pid.values[0]) + PLAYER_HEADSHOT_EXT,
+                source=PLAYER_HEADSHOT_URL + str(pid) + PLAYER_HEADSHOT_EXT,
                 xref="paper", yref="paper",
                 x=0.1, y=1.1,
                 sizex=0.25, sizey=0.25,

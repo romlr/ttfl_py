@@ -45,12 +45,6 @@ def plot_deck_ratings(names, last_n_games_fp, last_n_games_ttfl_score, nb_games,
     layout = pgo.Layout(
         title= 'Deck Ratings',
         barmode='group',
-        xaxis= dict(
-            title= 'Player',
-        ),
-        yaxis=dict(
-            title='Score',
-        ),
     )
 
     fig = pgo.Figure(data=data, layout=layout)
@@ -58,10 +52,8 @@ def plot_deck_ratings(names, last_n_games_fp, last_n_games_ttfl_score, nb_games,
     po.plot(fig, filename='Deck Ratings.html')
 
 
-def get_deck_ratings(deck, nb_games):
+def get_deck_ratings(deck, names, nb_games):
 
-    pids = []
-    names = []
     teams = []
 
     # ---
@@ -76,16 +68,10 @@ def get_deck_ratings(deck, nb_games):
     # ---
 
     # iterate through deck and fetch first and last name
-    for first_name, last_name in deck:
-
-        # fetch player id for each player based on first and last name
-        pid  = nba_player.get_player(first_name, last_name, season="2017-18")
-        pids.append(pid)
+    for pid, name in zip(deck, names):
 
         # fetch player names from info summary - TODO: add player summary, photo, etc.
         info = nba_player.PlayerSummary(pid).info()
-        name = '%s %s' % (info['FIRST_NAME'].values[0], info['LAST_NAME'].values[0])
-        names.append(name)
         team = info['TEAM_ABBREVIATION'].values[0]
         teams.append(team)
 
@@ -93,7 +79,10 @@ def get_deck_ratings(deck, nb_games):
         last_splits =  nba_player.PlayerGeneralSplits(pid, season="2017-18", measure_type="Base", last_n_games=nb_games).overall()
 
         # fetch nba fp from splits
-        last_n_games_fp.append(last_splits['NBA_FANTASY_PTS'].values[0])
+        try:
+            last_n_games_fp.append(last_splits['NBA_FANTASY_PTS'].values[0])
+        except IndexError:
+            last_n_games_fp.append(0.0)
 
         # calculate ttfl score from splits
         last_n_games_ttfl_score.append(score.get_ttfl_score(last_splits))
@@ -115,7 +104,7 @@ def get_deck_ratings(deck, nb_games):
     # ---
 
     # iterate through player ids
-    for (pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl, ov_gp) in zip(pids,
+    for (pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl, ov_gp) in zip(deck,
                                                                     names,
                                                                     teams,
                                                                     last_n_games_fp,

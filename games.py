@@ -13,9 +13,10 @@ def print_best_rated_players(players, nb_players):
         print "%s (TTFL:%.1f, NBA FP: %.1f)" % (name[i], ttfl_avg[i], fp_avg[i])
 
 
-def get_day_games(date, nb_players):
+def get_day_games(date, nb_players, nb_shorlist):
 
-    shortlist = pandas.DataFrame(columns=['PLAYER_ID', 'PLAYER_NAME', 'TTFL_SCORE', 'NBA_FANTASY_PTS'])
+    # init shortlist
+    shortlist = pandas.DataFrame()
 
     # get scoreboard for specified date
     games = nba.Scoreboard(date.month, date.day, date.year).game_header()
@@ -50,9 +51,9 @@ def get_day_games(date, nb_players):
 
         print "----------"
 
-        shortlist.append(ht_players)
-        shortlist.append(vt_players)
+        shortlist = shortlist.append(ht_players)
+        shortlist = shortlist.append(vt_players)
 
-    shortlist = shortlist.sort_values('TTFL_SCORE', ascending=False)
+    shortlist = shortlist.sort_values('TTFL_SCORE', ascending=False)[0:nb_shorlist]
 
     return shortlist
