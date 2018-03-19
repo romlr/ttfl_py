@@ -1,13 +1,12 @@
 import pandas
-
 from nba_py import team as nba_team, constants as nba_constants
-
 import score
 
-def get_team_info(team_id):
+
+def get_team_info(_team_id):
 
     # get team info from team_id
-    info = nba_team.TeamSummary(team_id, season='2017-18').info()
+    info = nba_team.TeamSummary(_team_id, season='2017-18').info()
 
     # fetch data
     abbr =  info['TEAM_ABBREVIATION'].values[0]
@@ -18,14 +17,14 @@ def get_team_info(team_id):
     return (abbr, conf, rank)
 
 
-def get_team_best_rated_players(team_id, nb_players):
+def get_team_best_rated_players(_team_id, _nb_players):
 
     player_ttfl_avg = []
 
     # ---
 
     # get players splits from team_id
-    players = nba_team.TeamPlayers(team_id).season_totals()
+    players = nba_team.TeamPlayers(_team_id).season_totals()
 
     # parse results to calculate ttfl score list
     for index, row in players.iterrows():
@@ -38,7 +37,7 @@ def get_team_best_rated_players(team_id, nb_players):
     players = players.sort_values('TTFL_SCORE', ascending=False)
 
     # fetch best N players from players splits
-    players = players[0:nb_players]
+    players = players[0:_nb_players]
 
     # return data
     return players

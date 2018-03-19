@@ -49,7 +49,13 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
 
     # ---
 
+    print "Fetching %s log..." % name
+
     (game_matchup, game_date, game_fp, game_ttfl) = get_player_log(pid, nb_games)
+
+    print "%s log fetched..." % name
+
+    print "----------"
 
     # ---
 
@@ -62,6 +68,8 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
     ng_text = '%s<br>%s %s %s' % (ng_date, player_team, ng_matchup, vs_team)
 
     # ---
+
+    print "Tracing %s rating trend..." % name
 
     # trace plots for nba fp and ttfl score trends
     xaxis = []
@@ -173,3 +181,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
     fig = pgo.Figure(data=data, layout=layout)
 
     po.plot(fig, filename='%s Trend.html' % name)
+
+    print "%s rating trend traced..." % name
+
+    print "----------"

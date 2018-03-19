@@ -67,6 +67,8 @@ def get_deck_ratings(deck, names, nb_games):
 
     # ---
 
+    print "Fetching deck ratings..."
+
     # iterate through deck and fetch first and last name
     for pid, name in zip(deck, names):
 
@@ -97,9 +99,19 @@ def get_deck_ratings(deck, names, nb_games):
         # calculate ttfl score from splits
         overall_ttfl_score.append(score.get_ttfl_score(overall_splits))
 
+    print "Deck ratings fetched..."
+
+    print "----------"
+
     # ---
 
+    print "Tracing deck ratings..."
+
     plot_deck_ratings(names, last_n_games_fp, last_n_games_ttfl_score, nb_games, overall_fp, overall_ttfl_score)
+
+    print "Deck ratings traced..."
+
+    print "----------"
 
     # ---
 

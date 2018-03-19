@@ -8,20 +8,12 @@ if __name__ == "__main__":
 
     TODAY = datetime.date.today()
     NB_PLAYERS = 5
-    NB_SHORTLIST = 15
+    NB_SHORTLIST = 20
 
     shortlist = games.get_day_games(TODAY, NB_PLAYERS, NB_SHORTLIST)
 
-    names = shortlist['PLAYER_NAME'].values
-    ttfl_score = shortlist['TTFL_SCORE'].values
-    nba_fp = shortlist['NBA_FANTASY_PTS'].values
-
-    print "SHORTLIST"
-    print
-    for i in range(0,NB_SHORTLIST):
-        print "%s (TTFL:%.1f, NBA FP:%.1f)" % (names[i], ttfl_score[i], nba_fp[i])
-
     my_deck = shortlist['PLAYER_ID'].values
+    names = shortlist['PLAYER_NAME'].values
 
     NB_GAMES = 10
 
