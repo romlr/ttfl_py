@@ -1,11 +1,11 @@
 import plotly.offline as po
 import plotly.graph_objs as pgo
-
+import pandas
 from nba_py import player as nba_player
 import player, score
 
 
-def plot_deck_ratings(names, last_n_games_fp, last_n_games_ttfl_score, nb_games, overall_fp, overall_ttfl_score):
+def plot_deck_ratings(_deck, _nb_games):
 
     # logos url constants
     NBA_LOGO_URL = 'https://secure.nba.com/assets/amp/include/images/nba-logo.png'
@@ -13,31 +13,35 @@ def plot_deck_ratings(names, last_n_games_fp, last_n_games_ttfl_score, nb_games,
 
     # trace bars representing last n games and overall season nba fp and ttfl ratings
     trace1 = pgo.Bar(
-        x=names,
-        y=last_n_games_fp,
-        name='last %d games nba fp avg' % nb_games,
-        hoverinfo='y'
+        x=_deck['LAST_N_GAMES_NBA_FANTASY_PTS'],
+        y=_deck['PLAYER_NAME'],
+        name='last %d games nba fp avg' % _nb_games,
+        hoverinfo='x',
+        orientation='h'
     )
 
     trace2 = pgo.Bar(
-        x=names,
-        y=last_n_games_ttfl_score,
-        name='last %d games ttfl avg' % nb_games,
-        hoverinfo='y'
+        x=_deck['LAST_N_GAMES_TTFL_SCORE'],
+        y=_deck['PLAYER_NAME'],
+        name='last %d games ttfl avg' % _nb_games,
+        hoverinfo='x',
+        orientation='h'
     )
 
     trace3 = pgo.Bar(
-        x=names,
-        y=overall_fp,
+        x=_deck['NBA_FANTASY_PTS'],
+        y=_deck['PLAYER_NAME'],
         name='overall season nba fp avg',
-        hoverinfo='y'
+        hoverinfo='x',
+        orientation='h'
     )
 
     trace4 = pgo.Bar(
-        x=names,
-        y=overall_ttfl_score,
+        x=_deck['TTFL_SCORE'],
+        y=_deck['PLAYER_NAME'],
         name='overall season ttfl avg',
-        hoverinfo='y'
+        hoverinfo='x',
+        orientation='h'
     )
 
     data = [trace1, trace2, trace3, trace4]
@@ -52,52 +56,39 @@ def plot_deck_ratings(names, last_n_games_fp, last_n_games_ttfl_score, nb_games,
     po.plot(fig, filename='Deck Ratings.html')
 
 
-def get_deck_ratings(deck, names, nb_games):
+def get_deck_ratings(_deck, _nb_games, _plot_trends):
 
-    teams = []
-
-    # ---
-
-    last_n_games_fp = []
-    last_n_games_ttfl_score = []
-
-    overall_fp = []
-    overall_gp = []
-    overall_ttfl_score = []
+    last_n_games_fp_avg = []
+    last_n_games_ttfl_avg = []
 
     # ---
 
     print "Fetching deck ratings..."
 
     # iterate through deck and fetch first and last name
-    for pid, name in zip(deck, names):
+    pids = _deck['PLAYER_ID'].values
+    names = _deck['PLAYER_NAME'].values
+    teams = _deck['TEAM_ABBR'].values
+    overall_fp_avg = _deck['NBA_FANTASY_PTS'].values
+    overall_ttfl_avg = _deck['TTFL_SCORE'].values
+    overall_gp = _deck['GP'].values
 
-        # fetch player names from info summary - TODO: add player summary, photo, etc.
-        info = nba_player.PlayerSummary(pid).info()
-        team = info['TEAM_ABBREVIATION'].values[0]
-        teams.append(team)
+    for pid, name in zip(pids, names):
 
         # fetch player splits for last N games (passed as parameter)
-        last_splits =  nba_player.PlayerGeneralSplits(pid, season="2017-18", measure_type="Base", last_n_games=nb_games).overall()
+        last_splits =  nba_player.PlayerGeneralSplits(pid, last_n_games=_nb_games).overall()
 
         # fetch nba fp from splits
         try:
-            last_n_games_fp.append(last_splits['NBA_FANTASY_PTS'].values[0])
+            last_n_games_fp_avg.append(last_splits['NBA_FANTASY_PTS'].values[0])
         except IndexError:
-            last_n_games_fp.append(0.0)
+            last_n_games_fp_avg.append(0.0)
 
         # calculate ttfl score from splits
-        last_n_games_ttfl_score.append(score.get_ttfl_score(last_splits))
+        last_n_games_ttfl_avg.append(score.get_ttfl_score(last_splits))
 
-        # fetch player splits for overall season
-        overall_splits =  nba_player.PlayerGeneralSplits(pid, season="2017-18", measure_type="Base").overall()
-
-        # fetch nba fp and games played from splits
-        overall_fp.append(overall_splits['NBA_FANTASY_PTS'].values[0])
-        overall_gp.append(overall_splits['GP'].values[0])
-
-        # calculate ttfl score from splits
-        overall_ttfl_score.append(score.get_ttfl_score(overall_splits))
+    _deck['LAST_N_GAMES_NBA_FANTASY_PTS'] = pandas.Series(last_n_games_fp_avg, index=_deck.index)
+    _deck['LAST_N_GAMES_TTFL_SCORE'] = pandas.Series(last_n_games_ttfl_avg, index=_deck.index)
 
     print "Deck ratings fetched..."
 
@@ -107,7 +98,7 @@ def get_deck_ratings(deck, names, nb_games):
 
     print "Tracing deck ratings..."
 
-    plot_deck_ratings(names, last_n_games_fp, last_n_games_ttfl_score, nb_games, overall_fp, overall_ttfl_score)
+    plot_deck_ratings(_deck, _nb_games)
 
     print "Deck ratings traced..."
 
@@ -115,15 +106,16 @@ def get_deck_ratings(deck, names, nb_games):
 
     # ---
 
-    # iterate through player ids
-    for (pid, name, team, av_n_fp, av_n_ttfl, av_ov_fp, av_ov_ttfl, ov_gp) in zip(deck,
-                                                                    names,
-                                                                    teams,
-                                                                    last_n_games_fp,
-                                                                    last_n_games_ttfl_score,
-                                                                    overall_fp,
-                                                                    overall_ttfl_score,
-                                                                    overall_gp):
+    if _plot_trends:
+        # iterate through player ids
+        for (pid, name, team, last_n_fp_avg, last_n_ttfl_avg, ov_fp_avg, ov_ttfl_avg, ov_gp) in zip(pids,
+                                                                                                    names,
+                                                                                                    teams,
+                                                                                                    last_n_games_fp_avg,
+                                                                                                    last_n_games_ttfl_avg,
+                                                                                                    overall_fp_avg,
+                                                                                                    overall_ttfl_avg,
+                                                                                                    overall_gp):
 
-        # get player trend for last nb games
-        player.get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av_ov_ttfl, ov_gp)
+            # get player trend for last nb games
+            player.get_player_trend(pid, name, team, last_n_fp_avg, last_n_ttfl_avg, _nb_games, ov_fp_avg, ov_ttfl_avg, ov_gp)

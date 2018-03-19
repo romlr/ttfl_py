@@ -16,23 +16,20 @@ def get_injuries_report():
     return injuries_report
 
 
-def print_players(_players, _nb_players, _injuries_report):
+def print_players(_players, _nb_players):
 
     name = _players['PLAYER_NAME'].values
     ttfl_avg = _players['TTFL_SCORE'].values
     fp_avg = _players['NBA_FANTASY_PTS'].values
+    inj_status = _players['INJ_STATUS'].values
 
     for i in range(0, _nb_players):
-        status, info =  injuries.check_player_injury(name[i], _injuries_report)
-
-        if not status:
-            type = info['Type'].values[0]
-            date = info['Date'].values[0]
-            injury_status = ' - OUT (%s from %s)' % (type, date)
+        if inj_status[i] == 'True':
+            injury_text = ' - OUT (%s from %s)' % (_players['INJ_TYPE'].values[i], _players['INJ_DATE'].values[i])
         else:
-            injury_status = ''
+            injury_text = ''
 
-        print "%s (TTFL:%.1f, NBA FP: %.1f)%s" % (name[i], ttfl_avg[i], fp_avg[i], injury_status)
+        print "%s (TTFL:%.1f, NBA FP: %.1f)%s" % (name[i], ttfl_avg[i], fp_avg[i], injury_text)
 
 
 def get_day_games(date, nb_players, nb_shorlist):
@@ -67,14 +64,14 @@ def get_day_games(date, nb_players, nb_shorlist):
         print "----------"
 
         # fetch and print N best players from home team
-        ht_br_players = team.get_team_best_rated_players(ht_id, nb_players)
-        print_players(ht_br_players, nb_players, injuries_report)
+        ht_br_players = team.get_team_best_rated_players(ht_id, ht_abbr, nb_players, injuries_report)
+        print_players(ht_br_players, nb_players)
 
         print "vs."
 
         # fetch and print N best players from visitor team
-        vt_br_players = team.get_team_best_rated_players(vt_id, nb_players)
-        print_players(vt_br_players, nb_players, injuries_report)
+        vt_br_players = team.get_team_best_rated_players(vt_id, vt_abbr, nb_players, injuries_report)
+        print_players(vt_br_players, nb_players)
 
         print "----------"
 
@@ -85,7 +82,7 @@ def get_day_games(date, nb_players, nb_shorlist):
     print "----------"
 
     shortlist = shortlist.sort_values('TTFL_SCORE', ascending=False)[0:nb_shorlist]
-    print_players(shortlist, nb_shorlist, injuries_report)
+    print_players(shortlist, nb_shorlist)
 
     print "----------"
 
