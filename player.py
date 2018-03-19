@@ -18,9 +18,9 @@ def get_player_next_game(pid):
     return (date, player_team, vs_team, location)
 
 
-def get_player_log(pid, nb_games):
+def get_player_log(_pid, _nb_games):
 
-    games_logs = nba_player.PlayerGameLogs(pid, season='2017-18').info()
+    games_logs = nba_player.PlayerGameLogs(_pid, season='2017-18').info()
 
     # ---
     game_matchup = []
@@ -28,7 +28,7 @@ def get_player_log(pid, nb_games):
     game_fp = []
     game_ttfl = []
 
-    idx = nb_games-1
+    idx = _nb_games-1
     while idx >= 0:
         game_matchup.append(games_logs['MATCHUP'].values[idx])
         game_date.append(games_logs['GAME_DATE'].values[idx])
@@ -39,7 +39,16 @@ def get_player_log(pid, nb_games):
     return (game_matchup, game_date, game_fp, game_ttfl)
 
 
-def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av_ov_ttfl, ov_gp):
+def get_player_trend(_player, _nb_games):
+
+    pid = _player['PLAYER_ID']
+    name = _player['PLAYER_NAME']
+    team = _player['TEAM_ABBR']
+    last_n_games_fp_avg = _player['LAST_N_GAMES_NBA_FANTASY_PTS']
+    last_n_games_ttfl_avg = _player['LAST_N_GAMES_TTFL_SCORE']
+    ov_fp_avg = _player['NBA_FANTASY_PTS']
+    ov_ttfl_avg = _player['TTFL_SCORE']
+    ov_gp = _player['GP']
 
     PLAYER_HEADSHOT_URL = 'https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/'
     PLAYER_HEADSHOT_EXT = '.png'
@@ -51,7 +60,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
 
     print "Fetching %s log..." % name
 
-    (game_matchup, game_date, game_fp, game_ttfl) = get_player_log(pid, nb_games)
+    (game_matchup, game_date, game_fp, game_ttfl) = get_player_log(pid, _nb_games)
 
     print "%s log fetched..." % name
 
@@ -100,9 +109,9 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
 
     trace3 = pgo.Scatter(
         x=xaxis,
-        y=[av_n_fp]*nb_games,
+        y=[last_n_games_fp_avg]*_nb_games,
         mode='lines',
-        name='last %d games nba fp avg' % nb_games,
+        name='last %d games nba fp avg' % _nb_games,
         line = dict(
             dash='dash',
         ),
@@ -111,9 +120,9 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
 
     trace4 = pgo.Scatter(
         x=xaxis,
-        y=[av_n_ttfl]*nb_games,
+        y=[last_n_games_ttfl_avg]*_nb_games,
         mode='lines',
-        name='last %d games ttfl avg' % nb_games,
+        name='last %d games ttfl avg' % _nb_games,
         line = dict(
             dash='dash',
         ),
@@ -122,7 +131,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
 
     trace5 = pgo.Scatter(
         x=xaxis,
-        y=[av_ov_fp]*nb_games,
+        y=[ov_fp_avg]*_nb_games,
         mode='lines',
         name='overall season (%d) nba fp avg' % ov_gp,
         line = dict(
@@ -133,7 +142,7 @@ def get_player_trend(pid, name, team, av_n_fp, av_n_ttfl, nb_games, av_ov_fp, av
 
     trace6 = pgo.Scatter(
         x=xaxis,
-        y=[av_ov_ttfl]*nb_games,
+        y=[ov_ttfl_avg]*_nb_games,
         mode='lines',
         name='overall season (%d) ttfl avg' % ov_gp,
         line = dict(

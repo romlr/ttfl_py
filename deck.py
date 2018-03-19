@@ -107,15 +107,18 @@ def get_deck_ratings(_deck, _nb_games, _plot_trends):
     # ---
 
     if _plot_trends:
-        # iterate through player ids
-        for (pid, name, team, last_n_fp_avg, last_n_ttfl_avg, ov_fp_avg, ov_ttfl_avg, ov_gp) in zip(pids,
-                                                                                                    names,
-                                                                                                    teams,
-                                                                                                    last_n_games_fp_avg,
-                                                                                                    last_n_games_ttfl_avg,
-                                                                                                    overall_fp_avg,
-                                                                                                    overall_ttfl_avg,
-                                                                                                    overall_gp):
+        # iterate through player deck
+        for index, row in _deck.iterrows():
+            player.get_player_trend(row, _nb_games)
 
-            # get player trend for last nb games
-            player.get_player_trend(pid, name, team, last_n_fp_avg, last_n_ttfl_avg, _nb_games, ov_fp_avg, ov_ttfl_avg, ov_gp)
+        # for (pid, name, team, last_n_fp_avg, last_n_ttfl_avg, ov_fp_avg, ov_ttfl_avg, ov_gp) in zip(pids,
+        #                                                                                             names,
+        #                                                                                             teams,
+        #                                                                                             last_n_games_fp_avg,
+        #                                                                                             last_n_games_ttfl_avg,
+        #                                                                                             overall_fp_avg,
+        #                                                                                             overall_ttfl_avg,
+        #                                                                                             overall_gp):
+        #
+        #     # get player trend for last nb games
+        #     player.get_player_trend(pid, name, team, last_n_fp_avg, last_n_ttfl_avg, _nb_games, ov_fp_avg, ov_ttfl_avg, ov_gp)
