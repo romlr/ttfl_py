@@ -74,7 +74,13 @@ def get_player_trend(_player, _nb_games):
     else:
         ng_matchup = '@'
 
-    ng_text = '%s<br>%s %s %s' % (ng_date, player_team, ng_matchup, vs_team)
+    ng_text = '%s <br> %s %s %s' % (ng_date, player_team, ng_matchup, vs_team)
+
+    inj_status = _player['INJ_STATUS']
+    if inj_status == 'True':
+        injury_text = 'OUT (%s from %s)' % (_player['INJ_TYPE'], _player['INJ_DATE'])
+    else:
+        injury_text = ''
 
     # ---
 
@@ -83,7 +89,7 @@ def get_player_trend(_player, _nb_games):
     # trace plots for nba fp and ttfl score trends
     xaxis = []
     for (matchup, date) in zip(game_matchup, game_date):
-        xaxis.append("%s<br>%s" % (date, matchup))
+        xaxis.append("%s %s" % (date, matchup))
 
     trace1 = pgo.Scatter(
         x=xaxis,
@@ -155,6 +161,12 @@ def get_player_trend(_player, _nb_games):
 
     layout = pgo.Layout(
         title= '%s Rating Trend' % name,
+        titlefont=dict(
+            size=18,
+        ),
+        xaxis=dict(
+            tickangle=45,
+        ),
         yaxis=dict(
             range= [0, 100],
         ),
@@ -177,12 +189,30 @@ def get_player_trend(_player, _nb_games):
                 layer="below",
             ),
         ],
+        legend=dict(
+            x=0.8, y=1.05,
+            font=dict(
+                size=10,
+            ),
+            bordercolor='#000000',
+            borderwidth=1
+        ),
         annotations=pgo.Annotations([
             pgo.Annotation(
                 xref='paper', yref='paper',
-                x=0.9, y=1.1,
+                x=0.2, y=1.0,
                 showarrow=False,
                 text='Next Game: %s' % ng_text,
+            ),
+            pgo.Annotation(
+                xref='paper', yref='paper',
+                x=0.5, y=1.0,
+                showarrow=False,
+                text=injury_text,
+                font=dict(
+                    size=12,
+                    color='#D62728'
+                ),
             ),
         ]),
     )
