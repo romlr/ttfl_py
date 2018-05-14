@@ -29,10 +29,10 @@ def get_player_log(_pid, _nb_games, _season, _season_type):
     game_fp = []
     game_ttfl = []
 
-    if _nb_games <= len(games_logs.values):
-        idx = _nb_games - 1
-    else:
-        idx = len(games_logs.values) - 1
+    if _nb_games > len(games_logs.values):
+        _nb_games = len(games_logs.values)
+
+    idx = _nb_games - 1
 
     while idx >= 0:
         game_matchup.append(games_logs['MATCHUP'].values[idx])
