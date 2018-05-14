@@ -9,6 +9,7 @@ def get_player_next_game(pid):
 
     # fetch next game from pid
     next_game = nba_player.PlayerProfile(pid).next_game()
+    next_game = next_game.sort_values('GAME_ID', ascending=False)
 
     date = next_game['GAME_DATE'].values[0]
     player_team = next_game['PLAYER_TEAM_ABBREVIATION'].values[0]
