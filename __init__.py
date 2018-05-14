@@ -1,6 +1,6 @@
 import datetime
-from nba_py import constants as nba_constants
 import games, deck
+from nba_py import constants as nba_constants
 
 
 if __name__ == "__main__":
@@ -9,7 +9,7 @@ if __name__ == "__main__":
     DATE = datetime.date.today()
     NB_PLAYERS = 4
     NB_SHORTLIST = 4
-    NB_GAMES = 12
+    NB_GAMES = 10
     PLOT_TRENDS = True
 
     # get shortlist from regular season stats
