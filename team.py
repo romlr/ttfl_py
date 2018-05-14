@@ -18,7 +18,7 @@ def get_team_info(_team_id):
     return (abbr, conf, rank)
 
 
-def get_team_best_rated_players(_team_id, _team_abbr, _nb_players, _injuries_report):
+def get_team_best_rated_players(_team_id, _team_abbr, _nb_players, _injuries_report, _season, _season_type):
 
     player_ttfl_avg = []
 
@@ -32,7 +32,7 @@ def get_team_best_rated_players(_team_id, _team_abbr, _nb_players, _injuries_rep
     # ---
 
     # get players splits from team_id
-    players = nba_team.TeamPlayers(_team_id).season_totals()
+    players = nba_team.TeamPlayers(_team_id, season=_season, season_type=_season_type).season_totals()
 
     # parse players df rows
     for index, row in players.iterrows():

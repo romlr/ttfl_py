@@ -7,10 +7,6 @@ import player, score
 
 def plot_deck_ratings(_deck, _nb_games):
 
-    # logos url constants
-    NBA_LOGO_URL = 'https://secure.nba.com/assets/amp/include/images/nba-logo.png'
-    TTFL_LOGO_URL = 'http//fantasy.trashtalk.co/images/logo.png'
-
     # trace bars representing last n games and overall season nba fp and ttfl ratings
     trace1 = pgo.Bar(
         x=_deck['LAST_N_GAMES_NBA_FANTASY_PTS'],
@@ -72,7 +68,7 @@ def get_deck_ratings(_deck, _nb_games, _plot_trends, _season, _season_type):
     for pid, name in zip(pids, names):
 
         # fetch player splits for last N games (passed as parameter)
-        last_splits =  nba_player.PlayerGeneralSplits(pid, last_n_games=_nb_games, season_type=_season_type).overall()
+        last_splits = nba_player.PlayerGeneralSplits(pid, last_n_games=_nb_games, season_type=_season_type).overall()
 
         # fetch nba fp from splits
         try:

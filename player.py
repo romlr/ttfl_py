@@ -118,9 +118,9 @@ def get_player_trend(_player, _nb_games, _season, _season_type):
 
     trace3 = pgo.Scatter(
         x=xaxis,
-        y=[last_n_games_fp_avg]*_nb_games,
+        y=[last_n_games_fp_avg]*len(xaxis),
         mode='lines',
-        name='last %d games nba fp avg' % _nb_games,
+        name='last %d games nba fp avg' % len(xaxis),
         line = dict(
             dash='dash',
         ),
@@ -129,9 +129,9 @@ def get_player_trend(_player, _nb_games, _season, _season_type):
 
     trace4 = pgo.Scatter(
         x=xaxis,
-        y=[last_n_games_ttfl_avg]*_nb_games,
+        y=[last_n_games_ttfl_avg]*len(xaxis),
         mode='lines',
-        name='last %d games ttfl avg' % _nb_games,
+        name='last %d games ttfl avg' % len(xaxis),
         line = dict(
             dash='dash',
         ),
@@ -140,9 +140,9 @@ def get_player_trend(_player, _nb_games, _season, _season_type):
 
     trace5 = pgo.Scatter(
         x=xaxis,
-        y=[ov_fp_avg]*_nb_games,
+        y=[ov_fp_avg]*len(xaxis),
         mode='lines',
-        name='overall season (%d) nba fp avg' % ov_gp,
+        name='overall (%d) nba fp avg' % ov_gp,
         line = dict(
             dash='dash',
         ),
@@ -151,9 +151,9 @@ def get_player_trend(_player, _nb_games, _season, _season_type):
 
     trace6 = pgo.Scatter(
         x=xaxis,
-        y=[ov_ttfl_avg]*_nb_games,
+        y=[ov_ttfl_avg]*len(xaxis),
         mode='lines',
-        name='overall season (%d) ttfl avg' % ov_gp,
+        name='overall (%d) ttfl avg' % ov_gp,
         line = dict(
             dash='dash',
         ),

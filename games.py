@@ -32,7 +32,7 @@ def print_players(_players, _nb_players):
         print "%s (TTFL:%.1f, NBA FP: %.1f)%s" % (name[i], ttfl_avg[i], fp_avg[i], injury_text)
 
 
-def get_day_games(date, nb_players, nb_shorlist):
+def get_day_games(date, nb_players, nb_shorlist, _season, _season_type):
 
     # init shortlist
     shortlist = pandas.DataFrame()
@@ -64,13 +64,13 @@ def get_day_games(date, nb_players, nb_shorlist):
         print "----------"
 
         # fetch and print N best players from home team
-        ht_br_players = team.get_team_best_rated_players(ht_id, ht_abbr, nb_players, injuries_report)
+        ht_br_players = team.get_team_best_rated_players(ht_id, ht_abbr, nb_players, injuries_report, _season, _season_type)
         print_players(ht_br_players, nb_players)
 
         print "vs."
 
         # fetch and print N best players from visitor team
-        vt_br_players = team.get_team_best_rated_players(vt_id, vt_abbr, nb_players, injuries_report)
+        vt_br_players = team.get_team_best_rated_players(vt_id, vt_abbr, nb_players, injuries_report, _season, _season_type)
         print_players(vt_br_players, nb_players)
 
         print "----------"
