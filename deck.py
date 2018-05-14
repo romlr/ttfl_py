@@ -5,7 +5,7 @@ from nba_py import player as nba_player, constants as nba_constants
 import player, score
 
 
-def plot_deck_ratings(_deck, _nb_games):
+def plot_deck_ratings(_deck, _nb_games, _date):
 
     # trace bars representing last n games and overall season nba fp and ttfl ratings
     trace1 = pgo.Bar(
@@ -43,16 +43,16 @@ def plot_deck_ratings(_deck, _nb_games):
     data = [trace1, trace2, trace3, trace4]
 
     layout = pgo.Layout(
-        title= 'Deck Ratings',
+        title= '%s Deck Ratings' % _date,
         barmode='group',
     )
 
     fig = pgo.Figure(data=data, layout=layout)
 
-    po.plot(fig, filename='Deck Ratings.html')
+    po.plot(fig, filename='./tmp/%s_deck_ratings.html' % _date)
 
 
-def get_deck_ratings(_deck, _nb_games, _plot_trends, _season, _season_type):
+def get_deck_ratings(_deck, _nb_games, _date, _plot_trends, _season, _season_type):
 
     last_n_games_fp_avg = []
     last_n_games_ttfl_avg = []
@@ -90,7 +90,7 @@ def get_deck_ratings(_deck, _nb_games, _plot_trends, _season, _season_type):
 
     print "Tracing deck ratings..."
 
-    plot_deck_ratings(_deck, _nb_games)
+    plot_deck_ratings(_deck, _nb_games, _date)
 
     print "Deck ratings traced..."
 

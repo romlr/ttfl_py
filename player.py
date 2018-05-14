@@ -163,7 +163,7 @@ def get_player_trend(_player, _nb_games, _season, _season_type):
     data = [trace1, trace2, trace3, trace4, trace5, trace6]
 
     layout = pgo.Layout(
-        title= '%s Rating Trend' % name,
+        title='%s %s %s Ratings Trend' % (name, _season, _season_type),
         titlefont=dict(
             size=18,
         ),
@@ -222,7 +222,8 @@ def get_player_trend(_player, _nb_games, _season, _season_type):
 
     fig = pgo.Figure(data=data, layout=layout)
 
-    po.plot(fig, filename='%s Trend.html' % name)
+    fname = './tmp/%d_ratings.html' % (pid)
+    po.plot(fig, filename=fname)
 
     print "%s rating trend traced..." % name
 
