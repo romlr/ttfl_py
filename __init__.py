@@ -9,11 +9,11 @@ if __name__ == "__main__":
     DATE = datetime.date.today()
     NB_PLAYERS = 4
     NB_SHORTLIST = 4
-    NB_GAMES = 4
+    NB_GAMES = 12
     PLOT_TRENDS = True
-    SEASON = nba_constants.CURRENT_SEASON
-    SEASON_TYPE = nba_constants.SeasonType.Playoffs
 
-    shortlist = games.get_day_games(DATE, NB_PLAYERS, NB_SHORTLIST, SEASON, SEASON_TYPE)
+    # get shortlist from regular season stats
+    shortlist = games.get_day_games(DATE, NB_PLAYERS, NB_SHORTLIST, nba_constants.CURRENT_SEASON, nba_constants.SeasonType.Regular)
 
-    deck.get_deck_ratings(shortlist, NB_GAMES, DATE, PLOT_TRENDS, SEASON, SEASON_TYPE)
+    # fetch and trace playoffs ratings for shortlist
+    deck.get_deck_ratings(shortlist, NB_GAMES, DATE, PLOT_TRENDS, nba_constants.CURRENT_SEASON, nba_constants.SeasonType.Playoffs)
