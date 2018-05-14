@@ -18,9 +18,9 @@ def get_player_next_game(pid):
     return (date, player_team, vs_team, location)
 
 
-def get_player_log(_pid, _nb_games):
+def get_player_log(_pid, _nb_games, _season, _season_type):
 
-    games_logs = nba_player.PlayerGameLogs(_pid, season='2017-18').info()
+    games_logs = nba_player.PlayerGameLogs(_pid, season=_season, season_type=_season_type).info()
 
     # ---
     game_matchup = []
@@ -28,7 +28,11 @@ def get_player_log(_pid, _nb_games):
     game_fp = []
     game_ttfl = []
 
-    idx = _nb_games-1
+    if _nb_games <= len(games_logs.values):
+        idx = _nb_games - 1
+    else:
+        idx = len(games_logs.values) - 1
+
     while idx >= 0:
         game_matchup.append(games_logs['MATCHUP'].values[idx])
         game_date.append(games_logs['GAME_DATE'].values[idx])
@@ -39,7 +43,7 @@ def get_player_log(_pid, _nb_games):
     return (game_matchup, game_date, game_fp, game_ttfl)
 
 
-def get_player_trend(_player, _nb_games):
+def get_player_trend(_player, _nb_games, _season, _season_type):
 
     pid = _player['PLAYER_ID']
     name = _player['PLAYER_NAME']
@@ -60,11 +64,9 @@ def get_player_trend(_player, _nb_games):
 
     print "Fetching %s log..." % name
 
-    (game_matchup, game_date, game_fp, game_ttfl) = get_player_log(pid, _nb_games)
+    (game_matchup, game_date, game_fp, game_ttfl) = get_player_log(pid, _nb_games, _season, _season_type)
 
     print "%s log fetched..." % name
-
-    print "----------"
 
     # ---
 
@@ -89,7 +91,7 @@ def get_player_trend(_player, _nb_games):
     # trace plots for nba fp and ttfl score trends
     xaxis = []
     for (matchup, date) in zip(game_matchup, game_date):
-        xaxis.append("%s %s" % (date, matchup))
+        xaxis.append("%s<br>%s" % (date, matchup))
 
     trace1 = pgo.Scatter(
         x=xaxis,

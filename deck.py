@@ -1,7 +1,7 @@
 import plotly.offline as po
 import plotly.graph_objs as pgo
 import pandas
-from nba_py import player as nba_player
+from nba_py import player as nba_player, constants as nba_constants
 import player, score
 
 
@@ -56,7 +56,7 @@ def plot_deck_ratings(_deck, _nb_games):
     po.plot(fig, filename='Deck Ratings.html')
 
 
-def get_deck_ratings(_deck, _nb_games, _plot_trends):
+def get_deck_ratings(_deck, _nb_games, _plot_trends, _season, _season_type):
 
     last_n_games_fp_avg = []
     last_n_games_ttfl_avg = []
@@ -68,15 +68,11 @@ def get_deck_ratings(_deck, _nb_games, _plot_trends):
     # iterate through deck and fetch first and last name
     pids = _deck['PLAYER_ID'].values
     names = _deck['PLAYER_NAME'].values
-    teams = _deck['TEAM_ABBR'].values
-    overall_fp_avg = _deck['NBA_FANTASY_PTS'].values
-    overall_ttfl_avg = _deck['TTFL_SCORE'].values
-    overall_gp = _deck['GP'].values
 
     for pid, name in zip(pids, names):
 
         # fetch player splits for last N games (passed as parameter)
-        last_splits =  nba_player.PlayerGeneralSplits(pid, last_n_games=_nb_games).overall()
+        last_splits =  nba_player.PlayerGeneralSplits(pid, last_n_games=_nb_games, season_type=_season_type).overall()
 
         # fetch nba fp from splits
         try:
@@ -109,7 +105,7 @@ def get_deck_ratings(_deck, _nb_games, _plot_trends):
     if _plot_trends:
         # iterate through player deck
         for index, row in _deck.iterrows():
-            player.get_player_trend(row, _nb_games)
+            player.get_player_trend(row, _nb_games, _season, _season_type)
 
         # for (pid, name, team, last_n_fp_avg, last_n_ttfl_avg, ov_fp_avg, ov_ttfl_avg, ov_gp) in zip(pids,
         #                                                                                             names,
