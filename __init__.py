@@ -7,8 +7,8 @@ if __name__ == "__main__":
     # execute only if run as a script
 
     DATE = datetime.date.today()
-    NB_PLAYERS = 4
-    NB_SHORTLIST = 4
+    NB_PLAYERS = 3
+    NB_SHORTLIST = 5
     NB_GAMES = 10
     PLOT_TRENDS = True
 
@@ -16,4 +16,4 @@ if __name__ == "__main__":
     shortlist = games.get_day_games(DATE, NB_PLAYERS, NB_SHORTLIST, nba_constants.CURRENT_SEASON, nba_constants.SeasonType.Regular)
 
     # fetch and trace playoffs ratings for shortlist
-    deck.get_deck_ratings(shortlist, NB_GAMES, DATE, PLOT_TRENDS, nba_constants.CURRENT_SEASON, nba_constants.SeasonType.Playoffs)
+    deck.get_deck_ratings(shortlist, NB_GAMES, DATE, PLOT_TRENDS, nba_constants.CURRENT_SEASON, nba_constants.SeasonType.Regular)
