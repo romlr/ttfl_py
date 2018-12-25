@@ -58,7 +58,7 @@ def get_player_trend(_player, _nb_games, _season, _season_type):
     PLAYER_HEADSHOT_URL = 'https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/'
     PLAYER_HEADSHOT_EXT = '.png'
 
-    TEAM_LOGO_URL = 'http://i.cdn.turner.com/nba/nba/.element/img/1.0/teamsites/logos/teamlogos_500x500/'
+    TEAM_LOGO_URL = 'https://www.nba.com/.element/img/1.0/teamsites/logos/teamlogos_500x500/'
     TEAM_LOGO_EXT = '.png'
 
     # ---

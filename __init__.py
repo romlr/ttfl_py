@@ -1,3 +1,6 @@
+from flask import Flask
+from flask import render_template
+
 import datetime
 import games, deck
 from nba_py import constants as nba_constants
@@ -6,10 +9,11 @@ from nba_py import constants as nba_constants
 if __name__ == "__main__":
     # execute only if run as a script
 
+    # DATE = datetime.datetime(2018, 12, 22)
     DATE = datetime.date.today()
     NB_PLAYERS = 3
     NB_SHORTLIST = 5
-    NB_GAMES = 10
+    NB_GAMES = 5
     PLOT_TRENDS = True
 
     # get shortlist from regular season stats
